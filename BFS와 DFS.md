@@ -4,7 +4,7 @@
 
 BFS는 너비 우선 탐색으로, queue를 사용해 구현하는 방법이다.
 
-DFS는 깊이 우선 탐색으로, stack을 사용해 구현하는 방법이다.
+DFS는 깊이 우선 탐색으로, stack 혹은 재귀를 사용해 구현하는 방법이다.
 
 <br/>
 
@@ -32,4 +32,50 @@ DFS는 루트의 자식 정점을 하나 방문한 다음 아래로 내려갈 �
 
 <br/>
 
-✔ 같은 문제를 각각 [BFS](https://blog.naver.com/o____ri/222072947774)와 [DFS](https://blog.naver.com/o____ri/222072925369)로 풀어보았다.
+마침 BOJ에 BFS와 DFS의 대표격인 [문제](https://www.acmicpc.net/problem/1260)가 있어서 풀어보았다.
+
+🌟 BFS
+
+```java
+public static void bfs(int start) {     
+    Queue<Integer> queue = new LinkedList<Integer>();
+    // 문제에서 시작점이 주어졌으므로 시작점을 먼저 queue에 넣는다.
+    queue.add(start);
+    visited[start] = true; // 방문한 곳은 꼭 표시해주기!
+
+    while (!queue.isEmpty()) {
+        int out = queue.poll(); // queue에 들어있는 원소를 빼낸 후 출력
+        System.out.print(out + " ");
+
+        for (int i = 0; i <= vertex; i++) {
+            if (graph[out][i] == 1 && visited[i] == false) {
+                queue.add(i); // 간선이 연결되어 있고 아직 방문하지 않은 곳을 queue에 넣어준다.
+                visited[i] = true; // queue에 넣어주었으므로 방문해주었다고 체크.
+            }
+        }
+        // 이 for문이 끝나면 다시 while문 처음으로 돌아가서 queue 원소를 빼내고 출력 후 반복
+    }
+}
+```
+
+<br/>
+
+🌟 DFS - 재귀로 구현
+
+```java
+public static void dfs(int start) {
+    visited[start] = true; // parameter로 들어온 현재 위치 값을 방문했다고 체크
+    System.out.print(start + " "); // 방문한 곳은 출력해준다.
+    for (int i = 1; i <= vertex; i++) {
+        if (graph[start][i] == 1 && visited[i] == false) {
+            dfs(i); // 간선이 연결되어 있고 아직 방문하지 않은 곳을 재귀호출 -> 계속 깊이 들어감
+        }
+    }
+}
+```
+
+<br/>
+
+<br/>
+
+✔ 같은 [문제](acmicpc.net/problem/2583)를 각각 [BFS](https://blog.naver.com/o____ri/222072947774)와 [DFS](https://blog.naver.com/o____ri/222072925369)로 풀어보았다.
