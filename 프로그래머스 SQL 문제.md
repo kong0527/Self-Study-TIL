@@ -62,26 +62,30 @@
 
 1. [고양이와 개는 몇 마리 있을까](https://programmers.co.kr/learn/courses/30/lessons/59040)
 
-   🐱 SELECT ANIMAL_TYPE, COUNT(ANIMAL_ID) AS count 
-
-   ​      FROM ANIMAL_INS 
-
-   ​      GROUP BY ANIMAL_TYPE ORDER BY ANIMAL_TYPE ASC;
+   ```mysql
+SELECT ANIMAL_TYPE, COUNT(ANIMAL_ID) AS count 
+   FROM ANIMAL_INS 
+GROUP BY ANIMAL_TYPE ORDER BY ANIMAL_TYPE ASC;
+   ```
 
 2. [동명 동물 수 찾기](https://programmers.co.kr/learn/courses/30/lessons/59041)
 
-   🐱 SELECT NAME, COUNT(NAME) AS COUNT 
-         FROM ANIMAL_INS 
-         GROUP BY NAME HAVING COUNT(NAME) >= 2
-         ORDER BY NAME ASC;
+   ```mysql
+   SELECT NAME, COUNT(NAME) AS COUNT 
+   FROM ANIMAL_INS 
+   GROUP BY NAME HAVING COUNT(NAME) >= 2
+   ORDER BY NAME ASC;
+   ```
 
 3. [입양 시각 구하기 (1)](https://programmers.co.kr/learn/courses/30/lessons/59412)
 
-   🐱 SELECT HOUR(DATETIME) AS HOUR, COUNT(HOUR(DATETIME)) AS COUNT
-         FROM ANIMAL_OUTS
-         GROUP BY HOUR
-         HAVING HOUR >= 9 AND HOUR <= 19
-         ORDER BY HOUR ASC;
+   ```mysql
+   SELECT HOUR(DATETIME) AS HOUR, COUNT(HOUR(DATETIME)) AS COUNT
+   FROM ANIMAL_OUTS
+   GROUP BY HOUR
+   HAVING HOUR >= 9 AND HOUR <= 19
+   ORDER BY HOUR ASC;
+   ```
 
 <br/>
 
@@ -106,25 +110,115 @@
 
 1. [없어진 기록 찾기](https://programmers.co.kr/learn/courses/30/lessons/59042)
 
-   🐹 SELECT O.ANIMAL_ID, O.NAME
-         FROM ANIMAL_INS I ,ANIMAL_OUTS O
-         WHERE I.ANIMAL_ID (+) =  O.ANIMAL_ID 
-         AND I.ANIMAL_ID IS NULL
-         ORDER BY ANIMAL_ID;
+   ```mysql
+   SELECT O.ANIMAL_ID, O.NAME
+   FROM ANIMAL_INS I ,ANIMAL_OUTS O
+   WHERE I.ANIMAL_ID (+) =  O.ANIMAL_ID 
+   AND I.ANIMAL_ID IS NULL
+   ORDER BY ANIMAL_ID;
+   ```
 
 2. [있었는데요 없었습니다](https://programmers.co.kr/learn/courses/30/lessons/59043)
 
-   🐹 SELECT I.ANIMAL_ID, I.NAME
-         FROM ANIMAL_INS I, ANIMAL_OUTS O
-         WHERE I.ANIMAL_ID = O.ANIMAL_ID
-         AND O.DATETIME < I.DATETIME
-         ORDER BY I.DATETIME ASC;
+   ```mysql
+   SELECT I.ANIMAL_ID, I.NAME
+   FROM ANIMAL_INS I, ANIMAL_OUTS O
+   WHERE I.ANIMAL_ID = O.ANIMAL_ID
+   AND O.DATETIME < I.DATETIME
+   ORDER BY I.DATETIME ASC;
+   ```
 
 3. [오랜 기간 보호한 동물 (1)](https://programmers.co.kr/learn/courses/30/lessons/59044)
 
-   🐹 SELECT I.NAME, I.DATETIME
-         FROM ANIMAL_INS I LEFT JOIN ANIMAL_OUTS O ON I.ANIMAL_ID = O.ANIMAL_ID
-         WHERE O.ANIMAL_ID IS NULL
-         ORDER BY I.DATETIME
-         LIMIT 3;
+   ```mysql
+   SELECT I.NAME, I.DATETIME
+   FROM ANIMAL_INS I LEFT JOIN ANIMAL_OUTS O ON I.ANIMAL_ID = O.ANIMAL_ID
+   WHERE O.ANIMAL_ID IS NULL
+   ORDER BY I.DATETIME
+   LIMIT 3;
+   ```
 
+4. [보호소에서 중성화한 동물](https://programmers.co.kr/learn/courses/30/lessons/59045#fn1)
+
+   ```mysql
+   SELECT O.ANIMAL_ID, O.ANIMAL_TYPE, O.NAME
+   FROM ANIMAL_INS I LEFT JOIN ANIMAL_OUTS O ON I.ANIMAL_ID = O.ANIMAL_ID
+   WHERE O.ANIMAL_ID IS NOT NULL
+   AND I.SEX_UPON_INTAKE LIKE 'Intact %'
+   AND (O.SEX_UPON_OUTCOME LIKE 'Spayed %'
+       OR O.SEX_UPON_OUTCOME LIKE 'Neutered %')
+   ORDER BY O.ANIMAL_ID ASC;
+   ```
+
+<br/>
+
+#### [String, Date]
+
+1. 루시와 엘라 찾기
+
+   ```mysql
+   SELECT ANIMAL_ID, NAME, SEX_UPON_INTAKE
+   FROM ANIMAL_INS
+   WHERE NAME IN ('Ella', 'Lucy', 'Pickle', 'Rogan', 'Sabrina', 'Mitty');
+   ```
+
+2. [이름에 el이 들어가는 동물 찾기](https://programmers.co.kr/learn/courses/30/lessons/59047)
+
+   ```mysql
+   SELECT ANIMAL_ID, NAME
+   FROM ANIMAL_INS
+   WHERE NAME LIKE '%el%'
+   AND ANIMAL_TYPE = 'Dog'
+   ORDER BY NAME ASC;
+   ```
+
+3. [중성화 여부 파악하기](https://programmers.co.kr/learn/courses/30/lessons/59409)
+
+   ```mysql
+   SELECT ANIMAL_ID, NAME, 
+    	CASE WHEN SEX_UPON_INTAKE LIKE 'Neutered%' OR SEX_UPON_INTAKE LIKE 'Spayed%'
+       THEN 'O'
+       ELSE 'X'
+       END
+       AS '중성화'
+   FROM ANIMAL_INS
+   ORDER BY ANIMAL_ID ASC;
+   ```
+
+4. [오랜 기간 보호한 동물 (2)](https://programmers.co.kr/learn/courses/30/lessons/59411)
+
+   ```mysql
+   SELECT O.ANIMAL_ID, O.NAME
+   FROM ANIMAL_INS I LEFT JOIN ANIMAL_OUTS O ON I.ANIMAL_ID = O.ANIMAL_ID
+   WHERE O.ANIMAL_ID IS NOT NULL
+   ORDER BY O.DATETIME - I.DATETIME DESC
+   LIMIT 2;
+   ```
+
+5. [DATETIME에서 DATE로 형 변환](https://programmers.co.kr/learn/courses/30/lessons/59414)
+
+   ```mysql
+   SELECT ANIMAL_ID, NAME, DATE_FORMAT(DATETIME, '%Y-%m-%d') AS '날짜'
+   FROM ANIMAL_INS
+   ORDER BY ANIMAL_ID;
+   ```
+
+   <BR/>
+
+#### [중첩질의]
+
+1. [우유와 요거트가 담긴 장바구니](https://programmers.co.kr/learn/courses/30/lessons/62284)
+
+   ```mysql
+   SELECT DISTINCT(CART_ID)
+   FROM CART_PRODUCTS
+   WHERE CART_ID IN (
+       SELECT CART_ID
+       FROM CART_PRODUCTS
+       WHERE NAME = 'Milk'
+   )
+   AND NAME = 'Yogurt'
+   ORDER BY CART_ID ASC;
+   ```
+
+   
