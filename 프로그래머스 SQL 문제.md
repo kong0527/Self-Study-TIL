@@ -63,9 +63,9 @@
 1. [고양이와 개는 몇 마리 있을까](https://programmers.co.kr/learn/courses/30/lessons/59040)
 
    ```mysql
-SELECT ANIMAL_TYPE, COUNT(ANIMAL_ID) AS count 
+   SELECT ANIMAL_TYPE, COUNT(ANIMAL_ID) AS count 
    FROM ANIMAL_INS 
-GROUP BY ANIMAL_TYPE ORDER BY ANIMAL_TYPE ASC;
+   GROUP BY ANIMAL_TYPE ORDER BY ANIMAL_TYPE ASC;
    ```
 
 2. [동명 동물 수 찾기](https://programmers.co.kr/learn/courses/30/lessons/59041)
@@ -154,7 +154,7 @@ GROUP BY ANIMAL_TYPE ORDER BY ANIMAL_TYPE ASC;
 
 #### [String, Date]
 
-1. 루시와 엘라 찾기
+1. [루시와 엘라 찾기](https://programmers.co.kr/learn/courses/30/lessons/59046)
 
    ```mysql
    SELECT ANIMAL_ID, NAME, SEX_UPON_INTAKE
